@@ -54,18 +54,24 @@ def data_geo_num():
     print("\nCheck Values:\n", data['regio1'].unique())
     return data
 
+def data_median_rent():
+    data = data_geo_num()
+    m = data.groupby('regio1')['baseRent']
+    data['median_base_rent'] = m.transform(np.median)
+    print("\nMedian base rent in Lands:\n", data.head())
+    return data
+data_median_rent()
 
 def check_data():
     data = drop_columns()
     # print(data.head())
-    # print(data.info())
+    print(data.info())
     # print(data.describe())
-    # print("\nLets see PLZ:\n", data[
-    #                                 (data['geo_plz'] >= 10000) &
-    #                                 (data['geo_plz'] < 14000)].count())
+    print("\nLets see PLZ:\n", data[
+                                    (data['geo_plz'] <= 10000)].head())
     # print("\nCheck Values:\n", data[data['geo_plz'].count_values)
-    print("\nChecking how many values in PLZ:\n", data.groupby('geo_plz').size())
-check_data()
+    # print("\nChecking how many values in PLZ:\n", data.groupby('geo_plz').size())
+
 
 def data_histogram():
     data = data_geo_num()
@@ -90,6 +96,11 @@ def plz_hist():
     data['regio1_category'].hist()
     plt.show()
 
+def land_scater():
+    data = data_median_rent()
+    data.plot(kind="scatter", x="regio1", y='median_base_rent')
+    plt.show()
+land_scater()
 
 # Creating a Test Set
 from sklearn.model_selection import StratifiedShuffleSplit
